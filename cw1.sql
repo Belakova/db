@@ -6,6 +6,33 @@ drop table Account_table;
 drop table Branch_table;
 
 
+change customer ref in Account_table
+CREATE TYPE CustomerAccount AS OBJECT(acc Account,cust Customer)not final;
+Create table CustomerAccount_table of CustomerAccount;
+###
+ALTER TYPE PERSON
+	ADD MEMBER FUNCTION counting return INTEGER cascade;
+
+
+
+CREATE or replace TYPE BODY PERSON AS
+	MEMBER FUNCTION counting return integer IS
+	BEGIN
+	if person.pphone = 1 THEN
+	return '1 phone';
+	ELSIF person.pphone =2 then
+	return '2 phones';
+	else
+	Return 'more than 2 phones left';
+	END IF;
+	End counting;
+	END
+
+
+
+
+
+
 2.
 Create type Name as object(
 tittle VARCHAR2(8),
@@ -19,6 +46,10 @@ city VARCHAR2(20),
 postcode VARCHAR2(10)
 );
 
+
+###
+create type Phone as varray(10) of varchar2(12);  --> creating an array
+###
 create type Phone as object(
 mobile1 INTEGER,
 mobile2 INTEGER,
@@ -80,7 +111,8 @@ accountNum Ref Account
 
 3.
 CREATE table Branch_table of Branch(
-primary key (bID)
+primary key (bID),
+NOT NULL (bAddress,bPhone)
 );
 
 
@@ -92,7 +124,9 @@ constraint acc_TYPE check (accType IN ('savings', 'current'))
 
 
 CREATE table Employee_table of Employee(
-primary key(personID));
+primary key(personID),
+UNIQUE (bBranchID)
+constraint position check(position IN('Head','Manager','Project Leader','Accountant','Cashier')));
 ##constraint supervisor_position check(position NOT IN('Head'))  head employee cant be supervisor
 
 
